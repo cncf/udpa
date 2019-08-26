@@ -1,0 +1,321 @@
+syntax = "proto3";
+
+package udpa.data.orca.v1;
+
+option java_outer_classname = "Routing";
+option java_multiple_files = true;
+option java_package = "com.github.udpa.udpa.config.v1alpha";
+option go_package = "v1alpha";
+
+import "google/protobuf/any.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/wrappers.proto";
+
+import "validate/validate.proto";
+
+message ConfigProvider {}
+
+// A regex matcher designed for safety when used with untrusted input.
+message RegexDescriptor {
+  // Google's `RE2 <https://github.com/google/re2>`_ regex engine. The regex string must adhere to
+  // the documented `syntax <https://github.com/google/re2/wiki/Syntax>`_. The engine is designed
+  // to complete execution in linear time as well as limit the amount of memory used.
+  message GoogleRE2 {
+    // This field controls the RE2 "program size" which is a rough estimate of how complex a
+    // compiled regex is to evaluate. A regex that has a program size greater than the configured
+    // value will fail to compile. In this case, the configured max program size can be increased
+    // or the regex can be simplified. If not specified, the default is 100.
+    google.protobuf.UInt32Value max_program_size = 1;
+  }
+
+  oneof engine_type {
+    option (validate.required) = true;
+
+    // Google's RE2 regex engine.
+    GoogleRE2 google_re2 = 1 [(validate.rules).message.required = true];
+  }
+}
+
+// Specifies the way to match a string.
+message StringMatchDescriptor {
+  oneof match_pattern {
+    option (validate.required) = true;
+
+    // The input string must match exactly the string specified here.
+    //
+    // Examples:
+    //
+    // * *abc* only matches the value *abc*.
+    google.protobuf.Empty exact = 1;
+
+    // The input string must have the prefix specified here.
+    // Note: empty prefix is not allowed, please use regex instead.
+    //
+    // Examples:
+    //
+    // * *abc* matches the value *abc.xyz*
+    google.protobuf.Empty prefix = 2;
+
+    // The input string must have the suffix specified here.
+    // Note: empty prefix is not allowed, please use regex instead.
+    //
+    // Examples:
+    //
+    // * *abc* matches the value *xyz.abc*
+    google.protobuf.Empty suffix = 3;
+
+    // The input string must match the regular expression specified here.
+    RegexDescriptor regex = 4;
+  }
+}
+
+// Specifies the int64 start and end of the range using half-open interval semantics [start,
+// end).
+message Int64Range {
+  // start of the range (inclusive)
+  int64 start = 1;
+
+  // end of the range (exclusive)
+  int64 end = 2;
+}
+
+// Header name/value pair.
+message HeaderValue {
+  // Header name.
+  string key = 1 [(validate.rules).string = {min_bytes: 1, max_bytes: 16384}];
+
+  // Header value.
+  //
+  // The same :ref:`format specifier <config_access_log_format>` as used for
+  // :ref:`HTTP access logging <config_access_log>` applies here, however
+  // unknown header values are replaced with the empty string instead of `-`.
+  string value = 2 [(validate.rules).string.max_bytes = 16384];
+}
+
+// Header name/value pair plus option to control append behavior.
+message HeaderValueOption {
+  // Header name/value pair that this option applies to.
+  HeaderValue header = 1 [(validate.rules).message.required = true];
+
+  // Should the value be appended? If true (default), the value is appended to
+  // existing values.
+  google.protobuf.BoolValue append = 2;
+}
+
+// Request transformation when the action is request forwarding.
+message Transform {
+  // Specifies a list of HTTP headers that should be added to each response that
+  // the connection manager encodes. Headers specified at this level are applied
+  // after headers from any enclosed :ref:`envoy_api_msg_route.VirtualHost` or
+  // :ref:`envoy_api_msg_route.RouteAction`. For more information, including details on
+  // header value syntax, see the documentation on :ref:`custom request headers
+  // <config_http_conn_man_headers_custom_request_headers>`.
+  repeated HeaderValueOption response_headers_to_add = 4
+      [(validate.rules).repeated .max_items = 1000];
+
+  // Specifies a list of HTTP headers that should be removed from each response
+  // that the connection manager encodes.
+  repeated string response_headers_to_remove = 5;
+
+  // Specifies a list of HTTP headers that should be added to each request
+  // routed by the HTTP connection manager. Headers specified at this level are
+  // applied after headers from any enclosed :ref:`envoy_api_msg_route.VirtualHost` or
+  // :ref:`envoy_api_msg_route.RouteAction`. For more information, including details on
+  // header value syntax, see the documentation on :ref:`custom request headers
+  // <config_http_conn_man_headers_custom_request_headers>`.
+  repeated HeaderValueOption request_headers_to_add = 6
+      [(validate.rules).repeated .max_items = 1000];
+
+  // Specifies a list of HTTP headers that should be removed from each request
+  // routed by the HTTP connection manager.
+  repeated string request_headers_to_remove = 8;
+}
+
+// Actions may be redirect, route (forward) or further match-action tree levels.
+message Action {
+  // Redirects are a copy+paste of the Envoy v2 xDS
+  // envoy.api.v2.route.RedirectAction message. While this could be rewritten
+  // significantly for clarity, the idea is that the behaviors here seem very
+  // implementation non-specific. TODO(htuch): Can all the DPLB implementations
+  // out there implement this?
+  message Redirect {
+    // When the scheme redirection take place, the following rules apply:
+    //  1. If the source URI scheme is `http` and the port is explicitly
+    //     set to `:80`, the port will be removed after the redirection
+    //  2. If the source URI scheme is `https` and the port is explicitly
+    //     set to `:443`, the port will be removed after the redirection
+    oneof scheme_rewrite_specifier {
+      // The scheme portion of the URL will be swapped with "https".
+      bool https_redirect = 4;
+      // The scheme portion of the URL will be swapped with this value.
+      string scheme_redirect = 7;
+    }
+    // The host portion of the URL will be swapped with this value.
+    string host_redirect = 1;
+    // The port value of the URL will be swapped with this value.
+    uint32 port_redirect = 8;
+
+    oneof path_rewrite_specifier {
+      // The path portion of the URL will be swapped with this value.
+      string path_redirect = 2;
+
+      // Indicates that during redirection, the matched prefix (or path)
+      // should be swapped with this value. This option allows redirect URLs be dynamically created
+      // based on the request.
+      //
+      // .. attention::
+      //
+      //   Pay attention to the use of trailing slashes as mentioned in
+      //   :ref:`RouteAction's prefix_rewrite <envoy_api_field_route.RouteAction.prefix_rewrite>`.
+      string prefix_rewrite = 5;
+    }
+
+    enum RedirectResponseCode {
+      // Moved Permanently HTTP Status Code - 301.
+      MOVED_PERMANENTLY = 0;
+
+      // Found HTTP Status Code - 302.
+      FOUND = 1;
+
+      // See Other HTTP Status Code - 303.
+      SEE_OTHER = 2;
+
+      // Temporary Redirect HTTP Status Code - 307.
+      TEMPORARY_REDIRECT = 3;
+
+      // Permanent Redirect HTTP Status Code - 308.
+      PERMANENT_REDIRECT = 4;
+    }
+
+    // The HTTP status code to use in the redirect response. The default response
+    // code is MOVED_PERMANENTLY (301).
+    RedirectResponseCode response_code = 3 [(validate.rules).enum.defined_only = true];
+
+    // Indicates that during redirection, the query portion of the URL will
+    // be removed. Default value is false.
+    bool strip_query = 6;
+  }
+
+  // This is massively slimmed down from Envoy's v2 xDS
+  // envoy.api.v2.route.RouteAction. The point being that perhaps the most basic
+  // universal thing we can do is point at a given service. Beyond this, it's
+  // going to require feature-by-feature analysis.
+  message Route {
+    // The service names
+    string service_name = 1;
+
+    // Request transform description, i.e. what are we doing to the request
+    // when forwarding?
+    Transform transform = 2;
+
+    // TODO(htuch): what other parts of RouteAction are shared by known DPLBs?
+
+    // DPLB specific behaviors, e.g. traffic mirroring, rate limiting, request
+    // hedging, affinity, timeouts, retry policy, CORS, tracing, can be encoded here.
+    google.protobuf.Any dplb_extensions = 3;
+  }
+
+  oneof action_specifier {
+    Redirect redirect = 1;
+    Route route = 2;
+    // TODO(htuch): add DirectResponseAction
+    Matcher match = 3;
+  }
+}
+
+// A route table is a hierarchical construct, specifying a series of matchers
+// followed by some request action.
+message Matcher {
+  // Match-action table for string values.
+  message StringMatch {
+    // How will the string value be matched? The expected performance from an
+    // optimized implementation is:
+    // - exact: O(1)
+    // - prefix: O(m)
+    // - suffix: O(m)
+    // - regex: O(n.m)
+    // where n is the number of entried in the match table and m is the length
+    // of the value being looked up.
+    StringMatchDescriptor matcher = 1;
+
+    message InlineTable {
+      map<string, Action> inline_table = 1;
+    }
+
+    oneof table_specifier {
+      // Inline match-action table.
+      InlineTable inline_table = 2;
+
+      // Support VHDS-like behavior, on-demand fetching of header routing
+      // tables. The resource type is Action, the resource name is the string
+      // value match to be used. E.g. an Action called "*-foo.com" may be
+      // delivered dynamically.
+      ConfigProvider config_provider = 3;
+    }
+    // The string bytes matches are consumed and removed from the header
+    bool consume_matched = 4;
+  }
+
+  // Match-action table for integer ranges.
+  message IntegerMatch {
+    message IntegerRangeMatchAction {
+      Int64Range range = 1;
+      Action action = 2;
+    }
+    // Ranges must not overlap.
+    repeated IntegerRangeMatchAction match_actions = 1;
+  }
+
+  // Match-action pair.
+  message Match {
+    oneof header_match_specifier {
+      // String value match-action.
+      StringMatch string_match = 1;
+
+      // Integer value match-action.
+      IntegerMatch int_match = 2;
+    }
+  }
+
+  // Matches the :path header with the query string removed.
+  message PathMatcher {
+    // The match-action for the path value.
+    StringMatch match = 1;
+  }
+
+  // Matches a query parameter in the :path string.
+  message QueryParamMatcher {
+    // Specifies the name of the query parameter in the request.
+    string name = 1 [(validate.rules).string.min_bytes = 1];
+
+    // The match-action for the query value.
+    Match match = 2;
+  }
+
+  message HeaderMatch {
+    // Specifies the name of the header in the request.
+    string name = 1 [(validate.rules).string.min_bytes = 1];
+
+    // The match-action for the header value.
+    Match match = 2;
+  }
+
+  // Each match step may be either on path, a query parameter or a header.
+  oneof match_specifier {
+    PathMatcher path_matcher = 1;
+    QueryParamMatcher query_param_matcher = 2;
+    HeaderMatch header_matcher = 3;
+
+    // TODO(htuch): Should QueryParamMatcher and PathMatcher be generalized to
+    // support arbitrary separators and split, not, just ? and & in :path?
+  }
+}
+
+// A RouteConfiguration is a named resource in UDPA, describing a route table.
+message RouteConfiguration {
+  // Resource name.
+  string name = 1 [(validate.rules).string.min_bytes = 1];
+
+  // The root of the match-action tree.
+  Matcher matcher = 2;
+}
