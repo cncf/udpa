@@ -48,24 +48,16 @@ message StringMatchDescriptor {
     // * *abc* only matches the value *abc*.
     google.protobuf.Empty exact = 1;
 
-    // The input string must have the prefix specified here.
-    // Note: empty prefix is not allowed, please use regex instead.
+    // If the input string has a * at the beginning or end, wildcard semantics
+    // apply.
     //
     // Examples:
     //
     // * *abc* matches the value *abc.xyz*
-    google.protobuf.Empty prefix = 2;
-
-    // The input string must have the suffix specified here.
-    // Note: empty prefix is not allowed, please use regex instead.
-    //
-    // Examples:
-    //
-    // * *abc* matches the value *xyz.abc*
-    google.protobuf.Empty suffix = 3;
+    google.protobuf.Empty wildcard = 2;
 
     // The input string must match the regular expression specified here.
-    RegexDescriptor regex = 4;
+    RegexDescriptor regex = 3;
   }
 }
 
@@ -231,8 +223,7 @@ message Matcher {
     // How will the string value be matched? The expected performance from an
     // optimized implementation is:
     // - exact: O(1)
-    // - prefix: O(m)
-    // - suffix: O(m)
+    // - wildcard: O(m)
     // - regex: O(n.m)
     // where n is the number of entried in the match table and m is the length
     // of the value being looked up.
