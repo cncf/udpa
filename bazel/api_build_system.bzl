@@ -1,6 +1,7 @@
 load("@com_google_protobuf//:protobuf.bzl", _py_proto_library = "py_proto_library")
 load("@com_envoyproxy_protoc_gen_validate//bazel:pgv_proto_library.bzl", "pgv_cc_proto_library")
 load("@io_bazel_rules_go//proto:def.bzl", "go_grpc_library", "go_proto_library")
+load("@io_bazel_rules_go//go:def.bzl", "go_test")
 
 _PY_SUFFIX = "_py"
 _CC_SUFFIX = "_cc"
@@ -150,4 +151,12 @@ def udpa_proto_package(name = "pkg", srcs = [], deps = [], has_services = False,
             "@com_google_googleapis//google/api:annotations_go_proto",
             "@com_google_googleapis//google/rpc:status_go_proto",
         ],
+    )
+
+def udpa_go_test(name, srcs, importpath, proto_deps):
+    go_test(
+        name = name,
+        srcs = srcs,
+        importpath = _GO_IMPORTPATH_PREFIX + importpath,
+        deps = [_LibrarySuffix(d, _GO_SUFFIX) for d in proto_deps],
     )
