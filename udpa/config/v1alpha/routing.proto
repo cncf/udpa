@@ -48,16 +48,24 @@ message StringMatchDescriptor {
     // * *abc* only matches the value *abc*.
     google.protobuf.Empty exact = 1;
 
-    // If the input string has a * at the beginning or end, wildcard semantics
-    // apply.
+    // The input string must have the prefix specified here.
+    // Note: empty prefix is not allowed, please use regex instead.
     //
     // Examples:
     //
     // * *abc* matches the value *abc.xyz*
-    google.protobuf.Empty wildcard = 2;
+    string prefix = 2 [(validate.rules).string.min_bytes = 1];
+
+    // The input string must have the suffix specified here.
+    // Note: empty prefix is not allowed, please use regex instead.
+    //
+    // Examples:
+    //
+    // * *abc* matches the value *xyz.abc*
+    string suffix = 3 [(validate.rules).string.min_bytes = 1];
 
     // The input string must match the regular expression specified here.
-    RegexDescriptor regex = 3;
+    RegexDescriptor regex = 4;
   }
 }
 
@@ -222,8 +230,9 @@ message Matcher {
   message StringMatch {
     // How will the string value be matched? The expected performance from an
     // optimized implementation is:
-    // - exact: O(1)
-    // - wildcard: O(m)
+    // - exact: O(m)
+    // - prefix: O(m)
+    // - suffix: O(m)
     // - regex: O(n.m)
     // where n is the number of entried in the match table and m is the length
     // of the value being looked up.
@@ -283,7 +292,7 @@ message Matcher {
     Match match = 2;
   }
 
-  message HeaderMatch {
+  message HeaderMatcher {
     // Specifies the name of the header in the request.
     string name = 1 [(validate.rules).string.min_bytes = 1];
 
@@ -295,7 +304,7 @@ message Matcher {
   oneof match_specifier {
     PathMatcher path_matcher = 1;
     QueryParamMatcher query_param_matcher = 2;
-    HeaderMatch header_matcher = 3;
+    HeaderMatcher header_matcher = 3;
 
     // TODO(htuch): Should QueryParamMatcher and PathMatcher be generalized to
     // support arbitrary separators and split, not, just ? and & in :path?
