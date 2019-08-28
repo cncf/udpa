@@ -267,7 +267,7 @@ message OrderedMatcher {
 
 
     // Match-action table for integer ranges.
-    message IntegerRangeMatch {
+    message IntegerRangeMatcher {
       message IntegerRangeMatchAction {
         Int64Range range = 1;
         Action action = 2;
@@ -278,10 +278,10 @@ message OrderedMatcher {
 
     oneof header_match_specifier {
       // String value match-action.
-      StringMatcher string_matcher = 1;
+      StringMatcher string_matcher = 3;
 
       // Integer value match-action.
-      IntegerRangeMatcher integer_range_matcher = 2;
+      IntegerRangeMatcher integer_range_matcher = 4;
     }
   }
 
@@ -323,16 +323,16 @@ message LinearMatcher {
         StringMatchDescriptor descriptor = 1;
         string value = 2;
       }
-      message IntegerRangeMatch {
+      message IntegerRangeMatcher {
         Int64Range range = 1;
       }
 
       oneof header_matcher_specifier {
         option (validate.required) = true;
 
-        StringMatcher string_matcher = 1;
+        StringMatcher string_matcher = 4;
 
-        IntegerRangeMatcher integer_range_matcher = 2;
+        IntegerRangeMatcher integer_range_matcher = 5;
       }
     }
 
