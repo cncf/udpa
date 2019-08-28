@@ -38,6 +38,10 @@ message RegexDescriptor {
 
 // Specifies the way to match a string.
 message StringMatchDescriptor {
+  message ExactDescriptor {}
+  message PrefixDescriptor {}
+  message SuffixDescriptor {}
+
   oneof match_pattern {
     option (validate.required) = true;
 
@@ -46,7 +50,7 @@ message StringMatchDescriptor {
     // Examples:
     //
     // * *abc* only matches the value *abc*.
-    google.protobuf.Empty exact = 1;
+    ExactDescriptor exact = 1;
 
     // The input string must have the prefix specified here.
     // Note: empty prefix is not allowed, please use regex instead.
@@ -54,7 +58,7 @@ message StringMatchDescriptor {
     // Examples:
     //
     // * *abc* matches the value *abc.xyz*
-    google.protobuf.Empty prefix = 2;
+    PrefixDescriptor prefix = 2;
 
     // The input string must have the suffix specified here.
     // Note: empty prefix is not allowed, please use regex instead.
@@ -62,7 +66,7 @@ message StringMatchDescriptor {
     // Examples:
     //
     // * *abc* matches the value *xyz.abc*
-    google.protobuf.Empty suffix = 3;
+    SuffixDescriptor suffix = 3;
 
     // The input string must match the regular expression specified here.
     RegexDescriptor regex = 4;
