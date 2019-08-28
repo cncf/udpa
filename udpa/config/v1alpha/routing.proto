@@ -36,8 +36,7 @@ message RegexDescriptor {
   }
 }
 
-// Specifies the way to match a string.
-message StringMatchDescriptor {
+message SimpleStringMatchDescriptor {
   message ExactDescriptor {}
   message PrefixDescriptor {}
   message SuffixDescriptor {}
@@ -67,9 +66,18 @@ message StringMatchDescriptor {
     //
     // * *abc* matches the value *xyz.abc*
     SuffixDescriptor suffix = 3;
+  }
+}
+
+// Specifies the way to match a string.
+message StringMatchDescriptor {
+  oneof match_pattern {
+    option (validate.required) = true;
+
+    SimpleStringMatchDescriptor simple_match = 1;
 
     // The input string must match the regular expression specified here.
-    RegexDescriptor regex = 4;
+    RegexDescriptor regex = 2;
   }
 }
 
@@ -262,25 +270,18 @@ message HierarchicalMatcher {
 
     // Match-action table for string values.
     message StringMatcher {
-      // How will the string value be matched? The expected performance from an
-      // optimized implementation is:
+      // How will the string value be matched? Regex matcher is not allo
+      //
+      // The expected performance from an optimized implementation is:
       // - exact: O(m)
       // - prefix: O(m)  [longest prefix wins]
       // - suffix: O(m)  [longest suffix wins]
-      // - regex: O(n.m) [evaluated in-order]
       // where n is the number of entried in the match table and m is the length
       // of the value being looked up.
-      StringMatchDescriptor match_descriptor = 1;
+      SimpleStringMatchDescriptor match_descriptor = 1;
 
       message InlineTable {
-        message MatchAction {
-          // Value to match against header value using match_descriptor.
-          string value = 1;
-
-          // Action to take on match.
-          Action action = 2;
-        }
-        repeated MatchAction inline_table = 1;
+        map<string, Action> inline_table = 1;
       }
 
       oneof table_specifier {
