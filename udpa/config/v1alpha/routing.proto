@@ -248,7 +248,7 @@ message HeaderValueExtractor {
 
 // An ordered matcher is a hierarchical tree construct, specifying at each node a
 // single match criteria.
-message OrderedMatcher {
+message HierarchicalMatcher {
   message HeaderMatcher {
     // Specifies the name of the header in the request.
     string name = 1 [(validate.rules).string.min_bytes = 1];
@@ -379,7 +379,7 @@ message Matcher {
 
     LinearMatcher linear_matcher = 1;
 
-    OrderedMatcher ordered_matcher = 2;
+    HierarchicalMatcher hierarchical_matcher = 2;
   }
 }
 
