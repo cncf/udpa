@@ -54,7 +54,7 @@ message StringMatchDescriptor {
     // Examples:
     //
     // * *abc* matches the value *abc.xyz*
-    string prefix = 2 [(validate.rules).string.min_bytes = 1];
+    google.protobuf.Empty prefix = 2;
 
     // The input string must have the suffix specified here.
     // Note: empty prefix is not allowed, please use regex instead.
@@ -62,7 +62,7 @@ message StringMatchDescriptor {
     // Examples:
     //
     // * *abc* matches the value *xyz.abc*
-    string suffix = 3 [(validate.rules).string.min_bytes = 1];
+    google.protobuf.Empty suffix = 3;
 
     // The input string must match the regular expression specified here.
     RegexDescriptor regex = 4;
