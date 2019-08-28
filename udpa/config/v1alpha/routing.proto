@@ -223,14 +223,37 @@ message Action {
   }
 }
 
-// A route table is a hierarchical construct, specifying a series of matchers
-// followed by some request action.
+// Header matchers need to be able to reach within headers, e.g. :path or
+// cookie, and extract values of interest, e.g. query parameter. A
+// StringExtractor provides this capability.
+message HeaderValueExtractor {
+  oneof extractor_specifier {
+    option (validate.required) = true;
+
+    // Idempotent return of the header value.
+    google.protobuf.Empty exact = 1;
+
+    // The path component, i.e. anything before ?.
+    google.protobuf.Empty path = 2;
+
+    // A single query parameter.
+    string query_parameter = 3;
+
+    // TODO(htuch): should this be further generalized to support things like
+    // extracting values embedded in header values with separators such as , or
+    // :?
+  }
+}
+
+
+// An ordered matcher is a hierarchical tree construct, specifying at each node a
+// single match criteria.
 message OrderedMatcher {
   message HeaderMatcher {
     // Specifies the name of the header in the request.
     string name = 1 [(validate.rules).string.min_bytes = 1];
 
-    StringExtractor value_extractor = 2;
+    HeaderValueExtractor value_extractor = 2;
 
     // Match-action table for string values.
     message StringMatcher {
@@ -294,22 +317,6 @@ message OrderedMatcher {
   Action default_action = 2;
 }
 
-message StringExtractor {
-  oneof extractor_specifier {
-    option (validate.required) = true;
-
-    google.protobuf.Empty exact = 1;
-
-    google.protobuf.Empty path = 2;
-
-    string query_parameter = 3;
-
-    // TODO(htuch): should this be further generalized to support things like
-    // extracting values embedded in header values with separators such as , or
-    // :?
-  }
-}
-
 message LinearMatcher {
   message MatchAction {
     message HeaderMatcher {
@@ -318,7 +325,7 @@ message LinearMatcher {
 
       bool invert_match = 2;
 
-      StringExtractor value_extractor = 3;
+      HeaderValueExtractor value_extractor = 3;
       message StringMatcher {
         StringMatchDescriptor match_descriptor = 1;
         string value = 2;
