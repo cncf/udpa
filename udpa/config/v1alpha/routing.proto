@@ -225,89 +225,130 @@ message Action {
 
 // A route table is a hierarchical construct, specifying a series of matchers
 // followed by some request action.
-message Matcher {
-  // Match-action table for string values.
-  message StringMatch {
-    // How will the string value be matched? The expected performance from an
-    // optimized implementation is:
-    // - exact: O(m)
-    // - prefix: O(m)
-    // - suffix: O(m)
-    // - regex: O(n.m)
-    // where n is the number of entried in the match table and m is the length
-    // of the value being looked up.
-    StringMatchDescriptor matcher = 1;
-
-    message InlineTable {
-      map<string, Action> inline_table = 1;
-    }
-
-    oneof table_specifier {
-      // Inline match-action table.
-      InlineTable inline_table = 2;
-
-      // Support VHDS-like behavior, on-demand fetching of header routing
-      // tables. The resource type is Action, the resource name is the string
-      // value match to be used. E.g. an Action called "*-foo.com" may be
-      // delivered dynamically.
-      ConfigProvider config_provider = 3;
-    }
-    // The string bytes matches are consumed and removed from the header
-    bool consume_matched = 4;
-  }
-
-  // Match-action table for integer ranges.
-  message IntegerMatch {
-    message IntegerRangeMatchAction {
-      Int64Range range = 1;
-      Action action = 2;
-    }
-    // Ranges must not overlap.
-    repeated IntegerRangeMatchAction match_actions = 1;
-  }
-
-  // Match-action pair.
-  message Match {
-    oneof header_match_specifier {
-      // String value match-action.
-      StringMatch string_match = 1;
-
-      // Integer value match-action.
-      IntegerMatch int_match = 2;
-    }
-  }
-
-  // Matches the :path header with the query string removed.
-  message PathMatcher {
-    // The match-action for the path value.
-    StringMatch match = 1;
-  }
-
-  // Matches a query parameter in the :path string.
-  message QueryParamMatcher {
-    // Specifies the name of the query parameter in the request.
-    string name = 1 [(validate.rules).string.min_bytes = 1];
-
-    // The match-action for the query value.
-    Match match = 2;
-  }
-
+message OrderedMatcher {
   message HeaderMatcher {
     // Specifies the name of the header in the request.
     string name = 1 [(validate.rules).string.min_bytes = 1];
 
-    // The match-action for the header value.
-    Match match = 2;
+    StringExtractor value_extractor = 2;
+
+    // Match-action table for string values.
+    message StringMatcher {
+      // How will the string value be matched? The expected performance from an
+      // optimized implementation is:
+      // - exact: O(m)
+      // - prefix: O(m)  [longest prefix wins]
+      // - suffix: O(m)  [longest suffix wins]
+      // - regex: O(n.m) [evaluated in-order]
+      // where n is the number of entried in the match table and m is the length
+      // of the value being looked up.
+      StringMatchDescriptor descriptor = 1;
+
+      message InlineTable {
+        message MatchAction {
+          string value = 1;
+          Action action = 2;
+        }
+        repeated MatchAction inline_table = 1;
+      }
+
+      oneof table_specifier {
+        // Inline match-action table.
+        InlineTable inline_table = 2;
+
+        // Support VHDS-like behavior, on-demand fetching of header routing
+        // tables. The resource type is Action, the resource name is the string
+        // value match to be used. E.g. an Action called "*-foo.com" may be
+        // delivered dynamically. This can't be used with regex match
+        // descriptors.
+        ConfigProvider config_provider = 3;
+      }
+    }
+
+
+    // Match-action table for integer ranges.
+    message IntegerRangeMatch {
+      message IntegerRangeMatchAction {
+        Int64Range range = 1;
+        Action action = 2;
+      }
+      // Ranges must not overlap.
+      repeated IntegerRangeMatchAction match_actions = 1;
+    }
+
+    oneof header_match_specifier {
+      // String value match-action.
+      StringMatcher string_matcher = 1;
+
+      // Integer value match-action.
+      IntegerRangeMatcher integer_range_matcher = 2;
+    }
   }
 
-  // Each match step may be either on path, a query parameter or a header.
-  oneof match_specifier {
-    PathMatcher path_matcher = 1;
-    QueryParamMatcher query_param_matcher = 2;
-    HeaderMatcher header_matcher = 3;
+  oneof matcher_specifier {
+    option (validate.required) = true;
+    HeaderMatcher header_matcher = 1;
+  }
 
-    // TODO(htuch): Should QueryParamMatcher and PathMatcher be generalized to
-    // support arbitrary separators and split, not, just ? and & in :path?
+  // Fall-thru action if no other match occurs.
+  Action default_action = 2;
+}
+
+message StringExtractor {
+  oneof extractor_specifier {
+    option (validate.required) = true;
+
+    google.protobuf.Empty exact = 1;
+
+    google.protobuf.Empty path = 2;
+
+    string query_parameter = 3;
+
+    // TODO(htuch): should this be further generalized to support things like
+    // extracting values embedded in header values with separators such as , or
+    // :?
+  }
+}
+
+message LinearMatcher {
+  message MatchAction {
+    message HeaderMatcher {
+      // Specifies the name of the header in the request.
+      string name = 1 [(validate.rules).string.min_bytes = 1];
+
+      bool invert_match = 2;
+
+      StringExtractor value_extractor = 3;
+      message StringMatcher {
+        StringMatchDescriptor descriptor = 1;
+        string value = 2;
+      }
+      message IntegerRangeMatch {
+        Int64Range range = 1;
+      }
+
+      oneof header_matcher_specifier {
+        option (validate.required) = true;
+
+        StringMatcher string_matcher = 1;
+
+        IntegerRangeMatcher integer_range_matcher = 2;
+      }
+    }
+
+    repeated HeaderMatcher header_matchers = 1;
+    Action action = 2;
+  }
+  repeated MatchAction match_actions = 1;
+}
+
+message Matcher {
+  oneof matcher_specifier {
+    option (validate.required) = true;
+
+    LinearMatcher linear_matcher = 1;
+
+    OrderedMatcher ordered_matcher = 2;
   }
 }
 
