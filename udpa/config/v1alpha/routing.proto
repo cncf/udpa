@@ -253,6 +253,7 @@ message OrderedMatcher {
     // Specifies the name of the header in the request.
     string name = 1 [(validate.rules).string.min_bytes = 1];
 
+    // How the header value is extracted for match.
     HeaderValueExtractor value_extractor = 2;
 
     // Match-action table for string values.
@@ -269,7 +270,10 @@ message OrderedMatcher {
 
       message InlineTable {
         message MatchAction {
+          // Value to match against header value using match_descriptor.
           string value = 1;
+
+          // Action to take on match.
           Action action = 2;
         }
         repeated MatchAction inline_table = 1;
@@ -287,7 +291,6 @@ message OrderedMatcher {
         ConfigProvider config_provider = 3;
       }
     }
-
 
     // Match-action table for integer ranges.
     message IntegerRangeMatcher {
@@ -308,6 +311,7 @@ message OrderedMatcher {
     }
   }
 
+  // Currently only header matchers are supported.
   oneof matcher_specifier {
     option (validate.required) = true;
     HeaderMatcher header_matcher = 1;
@@ -317,19 +321,36 @@ message OrderedMatcher {
   Action default_action = 2;
 }
 
+// A linear matcher provides the ability to iterate over a list of (match
+// criteria, action) pairs, where the match criteria are a set of header
+// matchers.
 message LinearMatcher {
   message MatchAction {
     message HeaderMatcher {
       // Specifies the name of the header in the request.
       string name = 1 [(validate.rules).string.min_bytes = 1];
 
+      // If specified, the match result will be inverted before checking.
+      // Defaults to false.
+      //
+      // Examples:
+      //
+      // * The regex *\d{3}* does not match the value *1234*, so it will match
+      //   when inverted.
+      // * The range [-10,0) will match the value -1, so it will not match when
+      //   inverted.
       bool invert_match = 2;
 
+      // How the header value is extracted for match.
       HeaderValueExtractor value_extractor = 3;
+
+      // Matcher for string values.
       message StringMatcher {
         StringMatchDescriptor match_descriptor = 1;
         string value = 2;
       }
+
+      // Matcher for integer ranges.
       message IntegerRangeMatcher {
         Int64Range range = 1;
       }
@@ -343,7 +364,10 @@ message LinearMatcher {
       }
     }
 
+    // List of header matchers providing the match criteria.
     repeated HeaderMatcher header_matchers = 1;
+
+    // Action to take on match of all header_matchers.
     Action action = 2;
   }
   repeated MatchAction match_actions = 1;
