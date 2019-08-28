@@ -364,7 +364,9 @@ message LinearMatcher {
       }
     }
 
-    // List of header matchers providing the match criteria.
+    // List of header matchers providing the match criteria. All HeaderMatchers
+    // must match on the request; a logical AND of the HeaderMatcher results is
+    // performed.
     repeated HeaderMatcher header_matchers = 1;
 
     // Action to take on match of all header_matchers.
