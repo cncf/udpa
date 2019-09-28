@@ -5,6 +5,7 @@ import (
 
 	_ "github.com/cncf/udpa/udpa/data/orca/v1"
 	_ "github.com/cncf/udpa/udpa/service/orca/v1"
+	_ "github.com/cncf/udpa/udpa/type/v1"
 )
 
 func TestNoop(t *testing.T) {

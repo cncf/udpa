@@ -17,5 +17,6 @@ udpa_go_test(
     proto_deps = [
         "//udpa/data/orca/v1:pkg",
         "//udpa/service/orca/v1:pkg",
+        "//udpa/type/v1:pkg",
     ],
 )

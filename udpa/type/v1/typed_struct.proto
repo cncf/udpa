@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package udpa.type.v1;
+
+option java_outer_classname = "TypedStructProto";
+option java_multiple_files = true;
+option java_package = "com.github.udpa.udpa.type.v1";
+
+import "validate/validate.proto";
+import "google/protobuf/struct.proto";
+
+// A TypedStruct contains an arbitrary JSON serialized protocol buffer message with a URL that
+// describes the type of the serialized message. This is very similar to google.protobuf.Any,
+// instead of having protocol buffer binary, this employs google.protobuf.Struct as value.
+//
+// This message is intended to be embedded inside Any, so it shouldn't be directly referred
+// from other UDPA messages.
+//
+// When packing an opaque extension config, packing the expected type into Any is preferred
+// a wherever possible for its efficiency. Pack TypedStruct inside Any only if:
+// - A control plane send opaque message that is originally from external source in human readable
+//   format such as JSON or YAML.
+// - The control plane doesn't have the knowledge of the protocol buffer schema hence it cannot
+//   serialize the message in protocol buffer binary format.
+//
+// When a DPLB receives a TypedStruct in Any, it should:
+// - Check if the type_url of the TypedStruct matches the type the extension expects.
+// - Convert value to the type described in type_url and perform validation.
+message TypedStruct {
+  // A URL that uniquely identifies the type of the serialize protocol buffer message.
+  // This has same semantics and format described in google.protobuf.Any:
+  // https://github.com/protocolbuffers/protobuf/blob/master/src/google/protobuf/any.proto
+  string type_url = 1;
+
+  // A JSON represation of the above specified type.
+  google.protobuf.Struct value = 2;
+}
