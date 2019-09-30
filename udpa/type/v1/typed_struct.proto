@@ -33,6 +33,6 @@ message TypedStruct {
   // https://github.com/protocolbuffers/protobuf/blob/master/src/google/protobuf/any.proto
   string type_url = 1;
 
-  // A JSON represation of the above specified type.
+  // A JSON representation of the above specified type.
   google.protobuf.Struct value = 2;
 }
