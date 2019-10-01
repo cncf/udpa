@@ -27,6 +27,8 @@ import "google/protobuf/struct.proto";
 // When a DPLB receives a TypedStruct in Any, it should:
 // - Check if the type_url of the TypedStruct matches the type the extension expects.
 // - Convert value to the type described in type_url and perform validation.
+// TODO(lizan): Figure out how TypeStruct should be used with DPLB extensions that doesn't link
+// protobuf descriptor with DPLB itself, (e.g. gRPC LB Plugin, Envoy WASM extensions).
 message TypedStruct {
   // A URL that uniquely identifies the type of the serialize protocol buffer message.
   // This has same semantics and format described in google.protobuf.Any:
