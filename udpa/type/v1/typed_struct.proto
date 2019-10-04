@@ -23,6 +23,8 @@ import "google/protobuf/struct.proto";
 //   format such as JSON or YAML.
 // - The control plane doesn't have the knowledge of the protocol buffer schema hence it cannot
 //   serialize the message in protocol buffer binary format.
+// - The DPLB doesn't have have the knowledge of the protocol buffer schema its plugin or extension
+//   uses. This have to be indicated in the DPLB capability negotiation.
 //
 // When a DPLB receives a TypedStruct in Any, it should:
 // - Check if the type_url of the TypedStruct matches the type the extension expects.
