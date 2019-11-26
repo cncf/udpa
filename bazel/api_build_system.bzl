@@ -6,7 +6,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_test")
 _PY_SUFFIX = "_py"
 _CC_SUFFIX = "_cc"
 _GO_SUFFIX = "_go"
-_GO_IMPORTPATH_PREFIX = "github.com/envoyproxy/go-control-plane/"
+_GO_IMPORTPATH_PREFIX = "github.com/cncf/udpa/go/"
 
 _COMMON_PROTO_DEPS = [
     "@com_google_protobuf//:any_proto",
