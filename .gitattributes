@@ -1,1 +1,2 @@
 *.pb.go linguist-generated=true
+*.pb.validate.go linguist-generated=true
