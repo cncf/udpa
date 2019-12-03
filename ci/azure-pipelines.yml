@@ -11,7 +11,10 @@ jobs:
   container: envoyproxy/envoy-build-ubuntu@sha256:f0b2453c3587e3297f5caf5e97fbf57c97592c96136209ec13fe2795aae2c896
   steps:
   - task: CacheBeta@1
-    key: './WORKSPACE | **/*.bzl'
-    path: /tmp/repository_cache
+    inputs:
+      key: './WORKSPACE | **/*.bzl'
+      path: $(Agent.TempDirectory)/tmp
 
   - bash: bazel test --config=ci //...
+    env:
+      TEST_TMPDIR: $(Agent.TempDirectory)/tmp
