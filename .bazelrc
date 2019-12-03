@@ -1,0 +1,2 @@
+build:ci --announce_rc
+build:ci --repository_cache=/tmp/repository_cache
