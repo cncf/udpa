@@ -12,7 +12,7 @@ jobs:
   steps:
   - task: CacheBeta@1
     inputs:
-      key: './WORKSPACE | **/*.bzl'
+      key: './WORKSPACE | ./.bazel* | **/*.bzl'
       path: $(Agent.TempDirectory)/tmp
 
   - bash: bazel test --config=ci //...
