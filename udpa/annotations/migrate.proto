@@ -25,5 +25,6 @@ extend google.protobuf.EnumValueOptions {
 
 message MigrateAnnotation {
   // Rename the message/field/enum/enum value in next version.
+  // This doesn't handle package level move, there will be another field for that.
   string rename = 1;
 }
