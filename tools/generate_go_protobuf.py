@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 from subprocess import check_output
-from subprocess import check_call
 import glob
 import os
 import shutil
@@ -14,10 +13,6 @@ def generateProtobufs(output):
       'query',
       'kind("go_proto_library", ...)',
   ]).split()
-
-  # Each rule has the form //foo/bar:baz_go_proto.
-  # First build all the rules to ensure we have the output files.
-  check_call(['bazel', 'build', '-c', 'fastbuild'] + go_protos)
 
   for rule in go_protos:
     rule_dir, proto = rule.decode()[2:].rsplit(':', 1)

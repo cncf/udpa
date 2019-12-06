@@ -18,3 +18,5 @@ jobs:
   - bash: bazel test --config=ci //...
     env:
       TEST_TMPDIR: $(Agent.TempDirectory)/tmp
+
+  - bash: tools/generate_go_protobuf.py; git diff --quiet
