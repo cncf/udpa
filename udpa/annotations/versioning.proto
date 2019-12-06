@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package udpa.api.annotations;
+package udpa.annotations;
 
 import "google/protobuf/descriptor.proto";
 
