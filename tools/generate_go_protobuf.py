@@ -14,6 +14,8 @@ def generateProtobufs(output):
       'kind("go_proto_library", ...)',
   ]).split()
 
+  check_output(['bazel', 'build', '-c', 'fastbuild'] + go_protos)
+
   for rule in go_protos:
     rule_dir, proto = rule.decode()[2:].rsplit(':', 1)
     input_dir = os.path.join(bazel_bin, rule_dir, 'linux_amd64_stripped',
