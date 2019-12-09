@@ -15,7 +15,7 @@ jobs:
       key: './WORKSPACE | ./.bazel* | **/*.bzl'
       path: $(Agent.TempDirectory)/tmp
 
-  - bash: bazel test --config=ci //...
+  - bash: ci/check.sh
     env:
       TEST_TMPDIR: $(Agent.TempDirectory)/tmp
 
