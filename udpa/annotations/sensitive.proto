@@ -5,9 +5,8 @@ package udpa.annotations;
 import "google/protobuf/descriptor.proto";
 
 extend google.protobuf.FieldOptions {
-  // Magic number derived from concatenating the 7-bit (lower ASCII) characters
-  // 0x4E ('N'), 0x53 ('S'), 0x46 ('F'), 0x57 ('W').
-  SensitiveAnnotation sensitive = 164946775;
+  // Magic number is the 28 most significant bits in the sha256sum of "udpa.annotations.sensitive".
+  SensitiveAnnotation sensitive = 76569463;
 }
 
 message SensitiveAnnotation {
