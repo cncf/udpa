@@ -1,7 +1,8 @@
-load("@com_google_protobuf//:protobuf.bzl", _py_proto_library = "py_proto_library")
 load("@com_envoyproxy_protoc_gen_validate//bazel:pgv_proto_library.bzl", "pgv_cc_proto_library")
-load("@io_bazel_rules_go//proto:def.bzl", "go_grpc_library", "go_proto_library")
+load("@com_google_protobuf//:protobuf.bzl", _py_proto_library = "py_proto_library")
 load("@io_bazel_rules_go//go:def.bzl", "go_test")
+load("@io_bazel_rules_go//proto:def.bzl", "go_grpc_library", "go_proto_library")
+load("@rules_proto//proto:defs.bzl", "proto_library")
 
 _PY_PROTO_SUFFIX = "_py_proto"
 _CC_PROTO_SUFFIX = "_cc_proto"
@@ -83,7 +84,7 @@ def _udpa_cc_py_proto_library(
         linkstatic = 0,
         has_services = 0):
     relative_name = ":" + name
-    native.proto_library(
+    proto_library(
         name = name,
         srcs = srcs,
         deps = deps + _COMMON_PROTO_DEPS,
