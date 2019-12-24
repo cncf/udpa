@@ -45,6 +45,10 @@ def udpa_api_dependencies():
         locations = REPOSITORY_LOCATIONS,
     )
     udpa_http_archive(
+        name = "rules_proto",
+        locations = REPOSITORY_LOCATIONS,
+    )
+    udpa_http_archive(
         name = "net_zlib",
         build_file_content = BUILD_ALL_CONTENT,
         locations = REPOSITORY_LOCATIONS,
@@ -54,6 +58,7 @@ def udpa_api_dependencies():
         build_file = "@com_google_protobuf//:six.BUILD",
         locations = REPOSITORY_LOCATIONS,
     )
+
     # Misc. rebinds
     native.bind(
         name = "six",

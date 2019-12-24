@@ -39,6 +39,12 @@ REPOSITORY_LOCATIONS = dict(
         # 2019-07-17
         urls = ["https://github.com/bazelbuild/rules_foreign_cc/archive/a209b642c7687a8894c19b3dd40e43e6d3f38e83.tar.gz"],
     ),
+    rules_proto = dict(
+        sha256 = "73ebe9d15ba42401c785f9d0aeebccd73bd80bf6b8ac78f74996d31f2c0ad7a6",
+        strip_prefix = "rules_proto-2c0468366367d7ed97a1f702f9cd7155ab3f73c5",
+        # 2019-11-19
+        urls = ["https://github.com/bazelbuild/rules_proto/archive/2c0468366367d7ed97a1f702f9cd7155ab3f73c5.tar.gz"],
+    ),
     net_zlib = dict(
         sha256 = "629380c90a77b964d896ed37163f5c3a34f6e6d897311f1df2a7016355c45eff",
         strip_prefix = "zlib-1.2.11",
