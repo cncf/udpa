@@ -6,27 +6,11 @@ import "google/protobuf/descriptor.proto";
 
 // Magic number in this file derived from top 28bit of SHA256 digest of
 // "udpa.annotation.status".
-extend google.protobuf.MessageOptions {
-  StatusAnnotation message_status = 222707719;
-}
-
-extend google.protobuf.FieldOptions {
-  StatusAnnotation field_status = 222707719;
-}
-
-extend google.protobuf.EnumOptions {
-  StatusAnnotation enum_status = 222707719;
-}
-
-extend google.protobuf.EnumValueOptions {
-  StatusAnnotation enum_value_status = 222707719;
-}
-
 extend google.protobuf.FileOptions {
   StatusAnnotation file_status = 222707719;
 }
 
 message StatusAnnotation {
   // The entity is work-in-progress and subject to breaking changes.
-  bool wip = 1;
+  bool work_in_progress = 1;
 }

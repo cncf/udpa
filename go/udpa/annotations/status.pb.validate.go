@@ -44,7 +44,7 @@ func (m *StatusAnnotation) Validate() error {
 		return nil
 	}
 
-	// no validation rules for Wip
+	// no validation rules for WorkInProgress
 
 	return nil
 }
