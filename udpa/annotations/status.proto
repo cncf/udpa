@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package udpa.annotations;
+
+import "google/protobuf/descriptor.proto";
+
+// Magic number in this file derived from top 28bit of SHA256 digest of
+// "udpa.annotation.status".
+extend google.protobuf.FileOptions {
+  StatusAnnotation file_status = 222707719;
+}
+
+message StatusAnnotation {
+  // The entity is work-in-progress and subject to breaking changes.
+  bool work_in_progress = 1;
+}
