@@ -1,6 +1,6 @@
 module github.com/cncf/udpa/go
 
-go 1.13
+go 1.11
 
 require (
 	github.com/envoyproxy/protoc-gen-validate v0.1.0
