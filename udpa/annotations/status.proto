@@ -13,4 +13,10 @@ extend google.protobuf.FileOptions {
 message StatusAnnotation {
   // The entity is work-in-progress and subject to breaking changes.
   bool work_in_progress = 1;
+
+  // The entity represents the version at which active development for this
+  // package should take place. Earlier versions are considered frozen and not
+  // eligible for changes, later versions are typically machine generated from
+  // this active development version.
+  bool active = 2;
 }
