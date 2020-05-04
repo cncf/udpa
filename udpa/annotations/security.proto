@@ -2,7 +2,17 @@ syntax = "proto3";
 
 package udpa.annotations;
 
+import "udpa/annotations/status.proto";
+
+import "google/protobuf/any.proto";
 import "google/protobuf/descriptor.proto";
+
+import "validate/validate.proto";
+
+// All annotations in this file are experimental and subject to change. Their
+// only consumer today is the Envoy APIs and SecuritAnnotationValidator protoc
+// plugin in this repository.
+option (udpa.annotations.file_status).work_in_progress = true;
 
 extend google.protobuf.FieldOptions {
   // Magic number is the 28 most significant bits in the sha256sum of
@@ -10,12 +20,26 @@ extend google.protobuf.FieldOptions {
   FieldSecurityAnnotation security = 11122993;
 }
 
+message ExampleConfig {
+  // These take the form of text proto examples.  They may be changed in
+  // practice to accomodate the competing demands of performance, but should
+  // provide a useful guide to baseline configuration.
+  string example = 1;
+
+  // In the future we might add some matching conditions here to reflect the
+  // scenario that this example applies to, e.g. edge vs. L1-L2 vs. service
+  // mesh etc.
+}
+
 // These annotations indicate metadata for the purpose of understanding the
 // security significance of fields.
 message FieldSecurityAnnotation {
   // Field should be set in the presence of untrusted downstreams.
-  bool set_for_untrusted_downstream = 1;
+  bool configure_for_untrusted_downstream = 1;
 
   // Field should be set in the presence of untrusted upstreams.
-  bool set_for_untrusted_upstream = 2;
+  bool configure_for_untrusted_upstream = 2;
+
+  // Example configurations that should be used in untrusted scenarios.
+  repeated ExampleConfig example_configs = 3;
 }
