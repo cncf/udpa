@@ -21,9 +21,9 @@ extend google.protobuf.FieldOptions {
 }
 
 message ExampleConfig {
-  // These take the form of text proto examples.  They may be changed in
-  // practice to accomodate the competing demands of performance, but should
-  // provide a useful guide to baseline configuration.
+  // These take the form of YAML examples.  They may be changed in practice to
+  // accomodate the competing demands of performance, but should provide a
+  // useful guide to baseline configuration.
   string example = 1;
 
   // In the future we might add some matching conditions here to reflect the
