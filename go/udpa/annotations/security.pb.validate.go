@@ -36,73 +36,6 @@ var (
 // define the regex for a UUID once up-front
 var _security_uuidPattern = regexp.MustCompile("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")
 
-// Validate checks the field values on ExampleConfig with the rules defined in
-// the proto definition for this message. If any rules are violated, an error
-// is returned.
-func (m *ExampleConfig) Validate() error {
-	if m == nil {
-		return nil
-	}
-
-	// no validation rules for Example
-
-	return nil
-}
-
-// ExampleConfigValidationError is the validation error returned by
-// ExampleConfig.Validate if the designated constraints aren't met.
-type ExampleConfigValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e ExampleConfigValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e ExampleConfigValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e ExampleConfigValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e ExampleConfigValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e ExampleConfigValidationError) ErrorName() string { return "ExampleConfigValidationError" }
-
-// Error satisfies the builtin error interface
-func (e ExampleConfigValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sExampleConfig.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = ExampleConfigValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = ExampleConfigValidationError{}
-
 // Validate checks the field values on FieldSecurityAnnotation with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, an error is returned.
@@ -114,21 +47,6 @@ func (m *FieldSecurityAnnotation) Validate() error {
 	// no validation rules for ConfigureForUntrustedDownstream
 
 	// no validation rules for ConfigureForUntrustedUpstream
-
-	for idx, item := range m.GetExampleConfigs() {
-		_, _ = idx, item
-
-		if v, ok := interface{}(item).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return FieldSecurityAnnotationValidationError{
-					field:  fmt.Sprintf("ExampleConfigs[%v]", idx),
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
-	}
 
 	return nil
 }

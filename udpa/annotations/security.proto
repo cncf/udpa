@@ -20,17 +20,6 @@ extend google.protobuf.FieldOptions {
   FieldSecurityAnnotation security = 11122993;
 }
 
-message ExampleConfig {
-  // These take the form of YAML examples.  They may be changed in practice to
-  // accomodate the competing demands of performance, but should provide a
-  // useful guide to baseline configuration.
-  string example = 1;
-
-  // In the future we might add some matching conditions here to reflect the
-  // scenario that this example applies to, e.g. edge vs. L1-L2 vs. service
-  // mesh etc.
-}
-
 // These annotations indicate metadata for the purpose of understanding the
 // security significance of fields.
 message FieldSecurityAnnotation {
@@ -39,7 +28,4 @@ message FieldSecurityAnnotation {
 
   // Field should be set in the presence of untrusted upstreams.
   bool configure_for_untrusted_upstream = 2;
-
-  // Example configurations that should be used in untrusted scenarios.
-  repeated ExampleConfig example_configs = 3;
 }
