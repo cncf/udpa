@@ -58,12 +58,7 @@ func (m *ResourceLocator) Validate() error {
 		}
 	}
 
-	if utf8.RuneCountInString(m.GetAuthority()) < 1 {
-		return ResourceLocatorValidationError{
-			field:  "Authority",
-			reason: "value length must be at least 1 runes",
-		}
-	}
+	// no validation rules for Authority
 
 	if utf8.RuneCountInString(m.GetQualifiedType()) < 1 {
 		return ResourceLocatorValidationError{

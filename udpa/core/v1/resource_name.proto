@@ -30,7 +30,7 @@ message ResourceName {
   // Logical authority for resource (not necessarily transport network address).
   // Authorities are opaque in the UDPA API, data-plane load balancers will map
   // them to concrete network transports such as an xDS management server.
-  string authority = 2 [(validate.rules).string = {min_len: 1}];
+  string authority = 2;
 
   // Qualified resource type (as in type URL without types.googleapis.com/
   // prefix).
