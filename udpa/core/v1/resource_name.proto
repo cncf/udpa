@@ -32,9 +32,9 @@ message ResourceName {
   // them to concrete network transports such as an xDS management server.
   string authority = 2;
 
-  // Qualified resource type (as in type URL without types.googleapis.com/
+  // Fully qualified resource type (as in type URL without types.googleapis.com/
   // prefix).
-  string qualified_type = 3 [(validate.rules).string = {min_len: 1}];
+  string resource_type = 3 [(validate.rules).string = {min_len: 1}];
 
   // Additional parameters that can be used to select resource variants.
   ContextParams context = 4;

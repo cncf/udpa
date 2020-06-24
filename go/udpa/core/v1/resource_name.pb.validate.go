@@ -53,9 +53,9 @@ func (m *ResourceName) Validate() error {
 
 	// no validation rules for Authority
 
-	if utf8.RuneCountInString(m.GetQualifiedType()) < 1 {
+	if utf8.RuneCountInString(m.GetResourceType()) < 1 {
 		return ResourceNameValidationError{
-			field:  "QualifiedType",
+			field:  "ResourceType",
 			reason: "value length must be at least 1 runes",
 		}
 	}
