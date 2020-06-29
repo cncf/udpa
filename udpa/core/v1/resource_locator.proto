@@ -18,27 +18,27 @@ option (udpa.annotations.file_status).work_in_progress = true;
 //
 // Resource locators have a canonical udpa:// URI representation:
 //
-//   udpa://{authority}/{type_url}/{id/*}?{context_params}{#directive*}
+//   udpa://{authority}/{type_url}/{id/*}?{context_params}{#directive,*}
 //
 // where context_params take the form of URI query parameters.
 //
 // Resource locators have a similar canonical http:// URI representation:
 //
-//   http://{authority}/{type_url}/{id/*}?{context_params}{#directive*}
+//   http://{authority}/{type_url}/{id/*}?{context_params}{#directive,*}
 //
 // Resource locators also have a simplified file:// URI representation:
 //
-//   file:///{id/*}{#directive*}
+//   file:///{id/*}{#directive,*}
 //
 message ResourceLocator {
-  enum Schema {
+  enum Scheme {
     UDPA = 0;
     HTTP = 1;
     FILE = 2;
   }
 
-  // URI schema.
-  Schema schema = 1 [(validate.rules).enum = {defined_only: true}];
+  // URI scheme.
+  Scheme scheme = 1 [(validate.rules).enum = {defined_only: true}];
 
   // Opaque identifiers for the resource. These are effectively concatenated
   // with ‘/’ to form the non-query param path as resource ID. This may end
@@ -66,10 +66,26 @@ message ResourceLocator {
   }
 
   // Directives provide information to data-plane load balancers on how UDPA
-  // resource names are to be resolved. For example, they may provide
-  // alternative resource locators for when primary resolution fails. Directives
-  // are not part of resource names and do not appear in a xDS transport discovery
-  // request.
+  // resource names are to be interpreted and potentially further resolved. For
+  // example, they may provide alternative resource locators for when primary
+  // resolution fails. Directives are not part of resource names and do not
+  // appear in a xDS transport discovery request.
+  //
+  // When encoding to URIs, directives take the form:
+  //
+  // <directive name>=<string representation of directive value>
+  //
+  // For example, we can have alt=udpa://foo/bar or entry=some%20thing. Each
+  // directive value type may have its own string encoding, in the case of
+  // ResourceLocator there is a recursive URI encoding.
+  //
+  // Percent encoding applies to the URI encoding of the directive value.
+  // Multiple directives are comma-separated, so the reserved characters that
+  // require percent encoding in a directive value are [',', '#', '[', ']',
+  // '%']. These are the RFC3986 fragment reserved characters with the addition
+  // of the UDPA scheme specific ','. See
+  // https://tools.ietf.org/html/rfc3986#page-49 for further details on URI ABNF
+  // and reserved characters.
   message Directive {
     oneof directive {
       option (validate.required) = true;
@@ -77,7 +93,7 @@ message ResourceLocator {
       // An alternative resource locator for fallback if the resource is
       // unavailable. For example, take the resource locator:
       //
-      //   udpa://foo/some-type/some-route-table#alt=udpa://bar/some-type/another-route-table.
+      //   udpa://foo/some-type/some-route-table#alt=udpa://bar/some-type/another-route-table
       //
       // If the data-plane load balancer is unable to reach `foo` to fetch the
       // resource, it will fallback to `bar`. Alternative resources do not need
@@ -93,5 +109,9 @@ message ResourceLocator {
     }
   }
 
+  // A list of directives that appear in the UDPA resource locator #fragment.
+  //
+  // When encoding to URI form, directives are percent encoded with comma
+  // separation.
   repeated Directive directives = 6;
 }

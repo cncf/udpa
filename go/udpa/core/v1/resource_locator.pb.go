@@ -22,36 +22,36 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
-type ResourceLocator_Schema int32
+type ResourceLocator_Scheme int32
 
 const (
-	ResourceLocator_UDPA ResourceLocator_Schema = 0
-	ResourceLocator_HTTP ResourceLocator_Schema = 1
-	ResourceLocator_FILE ResourceLocator_Schema = 2
+	ResourceLocator_UDPA ResourceLocator_Scheme = 0
+	ResourceLocator_HTTP ResourceLocator_Scheme = 1
+	ResourceLocator_FILE ResourceLocator_Scheme = 2
 )
 
-var ResourceLocator_Schema_name = map[int32]string{
+var ResourceLocator_Scheme_name = map[int32]string{
 	0: "UDPA",
 	1: "HTTP",
 	2: "FILE",
 }
 
-var ResourceLocator_Schema_value = map[string]int32{
+var ResourceLocator_Scheme_value = map[string]int32{
 	"UDPA": 0,
 	"HTTP": 1,
 	"FILE": 2,
 }
 
-func (x ResourceLocator_Schema) String() string {
-	return proto.EnumName(ResourceLocator_Schema_name, int32(x))
+func (x ResourceLocator_Scheme) String() string {
+	return proto.EnumName(ResourceLocator_Scheme_name, int32(x))
 }
 
-func (ResourceLocator_Schema) EnumDescriptor() ([]byte, []int) {
+func (ResourceLocator_Scheme) EnumDescriptor() ([]byte, []int) {
 	return fileDescriptor_b10c84cf310f3232, []int{0, 0}
 }
 
 type ResourceLocator struct {
-	Schema       ResourceLocator_Schema `protobuf:"varint,1,opt,name=schema,proto3,enum=udpa.core.v1.ResourceLocator_Schema" json:"schema,omitempty"`
+	Scheme       ResourceLocator_Scheme `protobuf:"varint,1,opt,name=scheme,proto3,enum=udpa.core.v1.ResourceLocator_Scheme" json:"scheme,omitempty"`
 	Id           []string               `protobuf:"bytes,2,rep,name=id,proto3" json:"id,omitempty"`
 	Authority    string                 `protobuf:"bytes,3,opt,name=authority,proto3" json:"authority,omitempty"`
 	ResourceType string                 `protobuf:"bytes,4,opt,name=resource_type,json=resourceType,proto3" json:"resource_type,omitempty"`
@@ -89,9 +89,9 @@ func (m *ResourceLocator) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_ResourceLocator proto.InternalMessageInfo
 
-func (m *ResourceLocator) GetSchema() ResourceLocator_Schema {
+func (m *ResourceLocator) GetScheme() ResourceLocator_Scheme {
 	if m != nil {
-		return m.Schema
+		return m.Scheme
 	}
 	return ResourceLocator_UDPA
 }
@@ -236,7 +236,7 @@ func (*ResourceLocator_Directive) XXX_OneofWrappers() []interface{} {
 }
 
 func init() {
-	proto.RegisterEnum("udpa.core.v1.ResourceLocator_Schema", ResourceLocator_Schema_name, ResourceLocator_Schema_value)
+	proto.RegisterEnum("udpa.core.v1.ResourceLocator_Scheme", ResourceLocator_Scheme_name, ResourceLocator_Scheme_value)
 	proto.RegisterType((*ResourceLocator)(nil), "udpa.core.v1.ResourceLocator")
 	proto.RegisterType((*ResourceLocator_Directive)(nil), "udpa.core.v1.ResourceLocator.Directive")
 }
@@ -258,7 +258,7 @@ var fileDescriptor_b10c84cf310f3232 = []byte{
 	0x24, 0x92, 0xf1, 0x24, 0x73, 0x33, 0x49, 0x64, 0x9e, 0x55, 0x70, 0xe7, 0xce, 0xc6, 0xc4, 0x88,
 	0x27, 0x92, 0x9e, 0xcb, 0x30, 0x25, 0x82, 0x4c, 0x96, 0xc8, 0xee, 0x94, 0x8c, 0x59, 0x4c, 0x24,
 	0x75, 0x97, 0x45, 0x25, 0xec, 0xff, 0xaa, 0xc3, 0x6b, 0xc1, 0xc2, 0xc3, 0x49, 0x65, 0x01, 0x1d,
-	0x43, 0x2d, 0x8b, 0x46, 0x74, 0x42, 0x4c, 0x60, 0x01, 0xfb, 0xaa, 0x77, 0xe0, 0xac, 0xbb, 0x71,
+	0x43, 0x2d, 0x8b, 0x46, 0x74, 0x42, 0x4d, 0x60, 0x01, 0xfb, 0xaa, 0x77, 0xe0, 0xac, 0xbb, 0x71,
 	0x2e, 0xe1, 0xce, 0x9b, 0x92, 0xc5, 0xcd, 0x39, 0x6e, 0x7c, 0x07, 0x8a, 0x01, 0x82, 0x45, 0x37,
 	0x32, 0xa1, 0xc2, 0x62, 0x53, 0xb1, 0x54, 0x5b, 0x2f, 0xd5, 0x9f, 0x40, 0x69, 0x82, 0x40, 0x61,
 	0x31, 0xea, 0x42, 0x9d, 0xe4, 0x72, 0xc4, 0x05, 0x93, 0x33, 0x53, 0xb5, 0x80, 0xad, 0x07, 0x17,
@@ -276,6 +276,6 @@ var fileDescriptor_b10c84cf310f3232 = []byte{
 	0x7e, 0x7d, 0xf2, 0xd2, 0x50, 0xf0, 0x4d, 0xb8, 0xbb, 0x71, 0x33, 0x61, 0x96, 0xd2, 0x88, 0x7d,
 	0x62, 0x54, 0xe0, 0xe7, 0xbf, 0xbf, 0xfd, 0xf9, 0xab, 0x29, 0x4d, 0x00, 0xbb, 0x11, 0x9f, 0x38,
 	0x9f, 0x99, 0x1c, 0xe5, 0x67, 0x55, 0x8e, 0xf5, 0x30, 0xf8, 0xfa, 0xa5, 0x34, 0x7e, 0x71, 0x5b,
-	0x3e, 0x38, 0xd3, 0xca, 0x23, 0x7b, 0xfc, 0x3f, 0x00, 0x00, 0xff, 0xff, 0xfb, 0x4e, 0xe4, 0x16,
+	0x3e, 0x38, 0xd3, 0xca, 0x23, 0x7b, 0xfc, 0x3f, 0x00, 0x00, 0xff, 0xff, 0x7d, 0xa8, 0x3f, 0xc5,
 	0xf4, 0x02, 0x00, 0x00,
 }
