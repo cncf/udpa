@@ -31,14 +31,14 @@ option (udpa.annotations.file_status).work_in_progress = true;
 //   file:///{id/*}{#directive,*}
 //
 message ResourceLocator {
-  enum Schema {
+  enum Scheme {
     UDPA = 0;
     HTTP = 1;
     FILE = 2;
   }
 
-  // URI schema.
-  Schema schema = 1 [(validate.rules).enum = {defined_only: true}];
+  // URI scheme.
+  Scheme scheme = 1 [(validate.rules).enum = {defined_only: true}];
 
   // Opaque identifiers for the resource. These are effectively concatenated
   // with ‘/’ to form the non-query param path as resource ID. This may end
@@ -83,7 +83,7 @@ message ResourceLocator {
   // Multiple directives are comma-separated, so the reserved characters that
   // require percent encoding in a directive value are [',', '#', '[', ']',
   // '%']. These are the RFC3986 fragment reserved characters with the addition
-  // of the UDPA schema specific ','. See
+  // of the UDPA scheme specific ','. See
   // https://tools.ietf.org/html/rfc3986#page-49 for further details on URI ABNF
   // and reserved characters.
   message Directive {

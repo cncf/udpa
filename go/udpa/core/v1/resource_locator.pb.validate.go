@@ -44,9 +44,9 @@ func (m *ResourceLocator) Validate() error {
 		return nil
 	}
 
-	if _, ok := ResourceLocator_Schema_name[int32(m.GetSchema())]; !ok {
+	if _, ok := ResourceLocator_Scheme_name[int32(m.GetScheme())]; !ok {
 		return ResourceLocatorValidationError{
-			field:  "Schema",
+			field:  "Scheme",
 			reason: "value must be one of the defined enum values",
 		}
 	}
