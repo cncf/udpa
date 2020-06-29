@@ -71,11 +71,11 @@ message ResourceLocator {
   // resolution fails. Directives are not part of resource names and do not
   // appear in a xDS transport discovery request.
   //
-  // When encoding to URIs, directives take form:
+  // When encoding to URIs, directives take the form:
   //
-  // <directive name>=<string representation of directive value>.
+  // <directive name>=<string representation of directive value>
   //
-  // For example, we might have alt=udpa://foo/bar or entry=some%20thing. Each
+  // For example, we can have alt=udpa://foo/bar or entry=some%20thing. Each
   // directive value type may have its own string encoding, in the case of
   // ResourceLocator there is a recursive URI encoding.
   //
@@ -93,7 +93,7 @@ message ResourceLocator {
       // An alternative resource locator for fallback if the resource is
       // unavailable. For example, take the resource locator:
       //
-      //   udpa://foo/some-type/some-route-table#alt=udpa://bar/some-type/another-route-table.
+      //   udpa://foo/some-type/some-route-table#alt=udpa://bar/some-type/another-route-table
       //
       // If the data-plane load balancer is unable to reach `foo` to fetch the
       // resource, it will fallback to `bar`. Alternative resources do not need
