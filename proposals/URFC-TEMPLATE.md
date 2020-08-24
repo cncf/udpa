@@ -2,7 +2,7 @@ Title
 ----
 * Author(s): [Author Name, Co-Author Name ...]
 * Approver: a11r
-* Status: {Draft, In Review, Ready for Implementation, Implemented}
+* Status: {Draft, In Review, Final, Implemented}
 * Implemented in: <xDS/UDPA client, ...>
 * Last updated: [Date]
 
