@@ -1,10 +1,9 @@
 Title
 ----
 * Author(s): [Author Name, Co-Author Name ...]
-* Approver: a11r
-* Status: {Draft, In Review, Final, Implemented}
+* Approver:
 * Implemented in: <xDS/UDPA client, ...>
-* Last updated: [Date]
+* Last updated: [YYYY-MM-DD]
 
 ## Abstract
 
