@@ -16,4 +16,5 @@ We will evolve and mold the APIs to support client-side lookaside load balancing
 
 Initial members will include representatives from the Envoy and gRPC projects. This will include Google and Lyft based maintainers, as well as members from Microsoft and Amazon. We are soliciting the wider data plane proxy community for additional interest in initial membership, since we feel that a truly universal API should reflect a diverse set of projects, organizations and individuals.
 
-We would like to keep the working group small and tightly focussed on efficiently balancing incrementally improving the API while pursuing longer term strategic evolution. We will meet once every two weeks on Zoom and communicate via the [udpa-wg@lists.cncf.io](https://lists.cncf.io/g/udpa-wg/) mailing list.
+We would like to keep the working group small and tightly focussed on efficiently balancing incrementally improving the API while pursuing longer term strategic evolution. We currently meet once every few months on Zoom and communicate via the [udpa-wg@lists.cncf.io](https://lists.cncf.io/g/udpa-wg/) mailing list. To monitor activity, you can either subscribe to a GitHub watch on this repository or join the [@cncf/udpa-wg](https://github.com/orgs/cncf/teams/udpa-wg) team for
+tagging on key PRs and RFCs.
