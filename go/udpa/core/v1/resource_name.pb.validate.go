@@ -44,10 +44,10 @@ func (m *ResourceName) Validate() error {
 		return nil
 	}
 
-	if len(m.GetId()) < 1 {
+	if utf8.RuneCountInString(m.GetId()) < 1 {
 		return ResourceNameValidationError{
 			field:  "Id",
-			reason: "value must contain at least 1 item(s)",
+			reason: "value length must be at least 1 runes",
 		}
 	}
 
