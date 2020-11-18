@@ -18,17 +18,17 @@ option (udpa.annotations.file_status).work_in_progress = true;
 //
 // Resource locators have a canonical udpa:// URI representation:
 //
-//   udpa://{authority}/{type_url}/{id/*}?{context_params}{#directive,*}
+//   udpa://{authority}/{type_url}/{id}?{context_params}{#directive,*}
 //
 // where context_params take the form of URI query parameters.
 //
 // Resource locators have a similar canonical http:// URI representation:
 //
-//   http://{authority}/{type_url}/{id/*}?{context_params}{#directive,*}
+//   http://{authority}/{type_url}/{id}?{context_params}{#directive,*}
 //
 // Resource locators also have a simplified file:// URI representation:
 //
-//   file:///{id/*}{#directive,*}
+//   file:///{id}{#directive,*}
 //
 message ResourceLocator {
   enum Scheme {
