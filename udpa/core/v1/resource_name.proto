@@ -25,7 +25,7 @@ option (udpa.annotations.file_status).work_in_progress = true;
 message ResourceName {
   // Opaque identifier for the resource. Any '/' will not be escaped during URI
   // encoding and will form part of the URI path.
-  string id = 1 [(validate.rules).string = {min_len: 1}];
+  string id = 1;
 
   // Logical authority for resource (not necessarily transport network address).
   // Authorities are opaque in the UDPA API, data-plane load balancers will map

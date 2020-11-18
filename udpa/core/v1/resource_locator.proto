@@ -43,7 +43,7 @@ message ResourceLocator {
   // Opaque identifier for the resource. Any '/' will not be escaped during URI
   // encoding and will form part of the URI path. This may end
   // with ‘*’ for glob collection references.
-  string id = 2 [(validate.rules).string = {min_len: 1}];
+  string id = 2;
 
   // Logical authority for resource (not necessarily transport network address).
   // Authorities are opaque in the UDPA API, data-plane load balancers will map
