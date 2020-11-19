@@ -51,12 +51,7 @@ func (m *ResourceLocator) Validate() error {
 		}
 	}
 
-	if len(m.GetId()) < 1 {
-		return ResourceLocatorValidationError{
-			field:  "Id",
-			reason: "value must contain at least 1 item(s)",
-		}
-	}
+	// no validation rules for Id
 
 	// no validation rules for Authority
 

@@ -18,17 +18,17 @@ option (udpa.annotations.file_status).work_in_progress = true;
 //
 // Resource locators have a canonical udpa:// URI representation:
 //
-//   udpa://{authority}/{type_url}/{id/*}?{context_params}{#directive,*}
+//   udpa://{authority}/{type_url}/{id}?{context_params}{#directive,*}
 //
 // where context_params take the form of URI query parameters.
 //
 // Resource locators have a similar canonical http:// URI representation:
 //
-//   http://{authority}/{type_url}/{id/*}?{context_params}{#directive,*}
+//   http://{authority}/{type_url}/{id}?{context_params}{#directive,*}
 //
 // Resource locators also have a simplified file:// URI representation:
 //
-//   file:///{id/*}{#directive,*}
+//   file:///{id}{#directive,*}
 //
 message ResourceLocator {
   enum Scheme {
@@ -40,10 +40,10 @@ message ResourceLocator {
   // URI scheme.
   Scheme scheme = 1 [(validate.rules).enum = {defined_only: true}];
 
-  // Opaque identifiers for the resource. These are effectively concatenated
-  // with ‘/’ to form the non-query param path as resource ID. This may end
+  // Opaque identifier for the resource. Any '/' will not be escaped during URI
+  // encoding and will form part of the URI path. This may end
   // with ‘*’ for glob collection references.
-  repeated string id = 2 [(validate.rules).repeated = {min_items: 1}];
+  string id = 2;
 
   // Logical authority for resource (not necessarily transport network address).
   // Authorities are opaque in the UDPA API, data-plane load balancers will map

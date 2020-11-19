@@ -15,7 +15,7 @@ option (udpa.annotations.file_status).work_in_progress = true;
 
 // UDPA resource name. This has a canonical udpa:// URI representation:
 //
-//   udpa://{authority}/{type_url}/{id/*}?{context_params}
+//   udpa://{authority}/{type_url}/{id}?{context_params}
 //
 // where context_params take the form of URI query parameters.
 //
@@ -23,9 +23,9 @@ option (udpa.annotations.file_status).work_in_progress = true;
 // purposes. UDPA resource names in this form appear only in discovery
 // request/response messages used with the xDS transport.
 message ResourceName {
-  // Opaque identifiers for the resource. These are effectively concatenated
-  // with ‘/’ to form the non-query param path as resource ID.
-  repeated string id = 1 [(validate.rules).repeated = {min_items: 1}];
+  // Opaque identifier for the resource. Any '/' will not be escaped during URI
+  // encoding and will form part of the URI path.
+  string id = 1;
 
   // Logical authority for resource (not necessarily transport network address).
   // Authorities are opaque in the UDPA API, data-plane load balancers will map
