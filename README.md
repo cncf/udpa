@@ -15,26 +15,27 @@ data plane configuration, similar to the role played by OpenFlow at L2/L3/L4 in
 SDN.
 
 The [existing Envoy xDS
-APIs](https://github.com/envoyproxy/envoy/tree/master/api)
-constitute the basis for this vision and will incrementally evolve towards
-supporting a goal of client neutrality. The xDS APIs have two components, a
-transport protocol and data model. The data model covers common data plane
-concerns such as service discovery, load balancing assignments, routing
-discovery, listener configuration, secret discovery, load reporting, health
-check delegation, etc.
+APIs](https://github.com/envoyproxy/envoy/tree/master/api) constitute the basis
+for this vision and will incrementally evolve towards supporting a goal of
+client neutrality. We will evolve the xDS APIs to support additional clients,
+for example data plane proxies beyond Envoy, proxyless service mesh libraries,
+hardware load balancers, mobile clients and beyond. We will strive to be vendor
+and implementation agnostic to the degree possible while not regressing on
+support for data plane components that have committed to xDS in production
+(Envoy & gRPC to date).
 
-We will evolve the xDS APIs to support additional clients, for example data
-plane proxies beyond Envoy, proxyless service mesh libraries, hardware load
-balancers, mobile clients and beyond. We will strive to be vendor and
-implementation agnostic to the degree possible while not regressing on support
-for data plane components that have committed to xDS in production (Envoy & gRPC to date).
+The xDS APIs have two delineated aspects, a transport protocol and data model,
+The xDS transport protocol provides a low latency versioned streaming gRPC
+delivery of xDS resources. The data model covers common data plane concerns such
+as service discovery, load balancing assignments, routing discovery, listener
+configuration, secret discovery, load reporting, health check delegation, etc.
 
 # Repository structure
 
 The xDS APIs are split between this repository and
-https://github.com/envoyproxy/envoy/tree/master/api. We aim to opportunistically
-migrate and define protobufs in this repository where practical, while
-maintaining the stability guarantees of the v3 xDS API.
+https://github.com/envoyproxy/envoy/tree/master/api. Our long-term goal is to
+move the entire API to this repository, this will be done opportunistically over
+time as we generalize parts of the API to be less client-specific.
 
 # Mailing list and meetings
 
