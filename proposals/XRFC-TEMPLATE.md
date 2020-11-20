@@ -2,7 +2,7 @@ Title
 ----
 * Author(s): [Author Name, Co-Author Name ...]
 * Approver:
-* Implemented in: <xDS/UDPA client, ...>
+* Implemented in: <xDS client, ...>
 * Last updated: [YYYY-MM-DD]
 
 ## Abstract
