@@ -38,8 +38,8 @@ maintaining the stability guarantees of the v3 xDS API.
 
 # Mailing list and meetings
 
-We have an open mailing list [xds-wg@lists.cncf.io](https://lists.cncf.io/g/udpa-wg/) for communication and announcements. We also meet
+We have an open mailing list [xds-wg@lists.cncf.io](https://lists.cncf.io/g/xds-wg/) for communication and announcements. We also meet
 on an ad hoc basis via Zoom.
 
-To monitor activity, you can either subscribe to a GitHub watch on this repository or join the [@cncf/udpa-wg](https://github.com/orgs/cncf/teams/udpa-wg) team for
+To monitor activity, you can either subscribe to a GitHub watch on this repository or join the [@cncf/xds-wg](https://github.com/orgs/cncf/teams/xds-wg) team for
 tagging on key PRs and RFCs.
