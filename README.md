@@ -1,20 +1,46 @@
-# Universal Data Plane API Working Group (UDPA-WG)
+# xDS API Working Group (xDS-WG)
 
 # Goal
 
-The objective of the Universal Data Plane API Working Group (UDPA-WG) is to bring together parties across the industry interested in a common control and configuration API for data plane proxies and load balancers. 
+The objective of the xDS API Working Group (xDS-WG) is to bring together parties
+across the industry interested in a common control and configuration API for
+data plane proxies and load balancers, based on the xDS APIs.
 
 # Vision
 
-The vision of the Universal data Plane API (UDPA) is articulated at [https://blog.envoyproxy.io/the-universal-data-plane-api-d15cec7a](https://blog.envoyproxy.io/the-universal-data-plane-api-d15cec7a). We will pursue a set of APIs that provide the de facto standard for L4/L7 data plane configuration, similar to the role played by OpenFlow at L2/L3/L4 in SDN.
+The xDS vision is one of a universal data plane API, articulated at
+[https://blog.envoyproxy.io/the-universal-data-plane-api-d15cec7a](https://blog.envoyproxy.io/the-universal-data-plane-api-d15cec7a).
+xDS aims to provide a set of APIs that provide the de facto standard for L4/L7
+data plane configuration, similar to the role played by OpenFlow at L2/L3/L4 in
+SDN.
 
-The APIs will be defined canonically in proto3 and incrementally evolve from [existing Envoy xDS APIs](https://github.com/envoyproxy/data-plane-api) via a well defined [stable API versioning policy](https://docs.google.com/document/d/1xeVvJ6KjFBkNjVspPbY_PwEDHC7XPi0J5p1SqUXcCl8/edit#). APIs will cover service discovery, load balancing assignments, routing discovery, listener configuration, secret discovery, load reporting, health check delegation, etc.
+The [existing Envoy xDS
+APIs](https://github.com/envoyproxy/envoy/tree/master/api) constitute the basis
+for this vision and will incrementally evolve towards supporting a goal of
+client neutrality. We will evolve the xDS APIs to support additional clients,
+for example data plane proxies beyond Envoy, proxyless service mesh libraries,
+hardware load balancers, mobile clients and beyond. We will strive to be vendor
+and implementation agnostic to the degree possible while not regressing on
+support for data plane components that have committed to xDS in production
+(Envoy & gRPC to date).
 
-We will evolve and mold the APIs to support client-side lookaside load balancing (e.g. gRPC-LB), data plane proxies beyond Envoy, hardware LB, mobile clients and beyond. We will strive to be vendor and implementation agnostic to the degree possible while not regressing on support for projects that have committed to UDPA in production (Envoy & gRPC-LB so far).
+The xDS APIs have two delineated aspects, a transport protocol and data model,
+The xDS transport protocol provides a low latency versioned streaming gRPC
+delivery of xDS resources. The data model covers common data plane concerns such
+as service discovery, load balancing assignments, routing discovery, listener
+configuration, secret discovery, load reporting, health check delegation, etc.
 
-# Membership
+# Repository structure
 
-Initial members will include representatives from the Envoy and gRPC projects. This will include Google and Lyft based maintainers, as well as members from Microsoft and Amazon. We are soliciting the wider data plane proxy community for additional interest in initial membership, since we feel that a truly universal API should reflect a diverse set of projects, organizations and individuals.
+The xDS APIs are split between this repository and
+https://github.com/envoyproxy/envoy/tree/master/api. Our long-term goal is to
+move the entire API to this repository, this will be done opportunistically over
+time as we generalize parts of the API to be less client-specific.
 
-We would like to keep the working group small and tightly focussed on efficiently balancing incrementally improving the API while pursuing longer term strategic evolution. We currently meet once every few months on Zoom and communicate via the [udpa-wg@lists.cncf.io](https://lists.cncf.io/g/udpa-wg/) mailing list. To monitor activity, you can either subscribe to a GitHub watch on this repository or join the [@cncf/udpa-wg](https://github.com/orgs/cncf/teams/udpa-wg) team for
+# Mailing list and meetings
+
+We have an open mailing list [xds-wg@lists.cncf.io](https://lists.cncf.io/g/xds-wg/) for communication and announcements. We also meet
+on an ad hoc basis via Zoom.
+
+To monitor activity, you can either subscribe to a GitHub watch on this repository or join the [@cncf/xds-wg](https://github.com/orgs/cncf/teams/xds-wg) team for
 tagging on key PRs and RFCs.
