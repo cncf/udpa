@@ -15,7 +15,7 @@ data plane configuration, similar to the role played by OpenFlow at L2/L3/L4 in
 SDN.
 
 The [existing Envoy xDS
-APIs](https://github.com/envoyproxy/envoy/tree/master/api) constitute the basis
+APIs](https://github.com/envoyproxy/envoy/tree/main/api) constitute the basis
 for this vision and will incrementally evolve towards supporting a goal of
 client neutrality. We will evolve the xDS APIs to support additional clients,
 for example data plane proxies beyond Envoy, proxyless service mesh libraries,
@@ -33,7 +33,7 @@ configuration, secret discovery, load reporting, health check delegation, etc.
 # Repository structure
 
 The xDS APIs are split between this repository and
-https://github.com/envoyproxy/envoy/tree/master/api. Our long-term goal is to
+https://github.com/envoyproxy/envoy/tree/main/api. Our long-term goal is to
 move the entire API to this repository, this will be done opportunistically over
 time as we generalize parts of the API to be less client-specific.
 
