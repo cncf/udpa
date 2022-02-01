@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package udpa.annotations;
+
+import "google/protobuf/descriptor.proto";
+
+// Magic number in this file derived from top 28bit of SHA256 digest of
+// "udpa.annotation.protodoc".
+
+extend google.protobuf.MessageOptions {
+  ProtodocAnnotation message_doc = 81912196;
+}
+
+extend google.protobuf.FieldOptions { ProtodocAnnotation field_doc = 81912196; }
+
+extend google.protobuf.EnumOptions { ProtodocAnnotation enum_doc = 81912196; }
+
+extend google.protobuf.EnumValueOptions {
+  ProtodocAnnotation enum_value_doc = 81912196;
+}
+
+extend google.protobuf.ServiceOptions {
+  ProtodocAnnotation service_doc = 81912196;
+}
+
+extend google.protobuf.MethodOptions {
+  ProtodocAnnotation method_doc = 81912196;
+}
+
+extend google.protobuf.FileOptions { ProtodocAnnotation file_doc = 81912196; }
+
+message ProtodocAnnotation {
+  // Not implemented yet annotation. This will hide the
+  bool not_implemented_hide = 1;
+}
